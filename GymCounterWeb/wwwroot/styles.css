@@ -20,7 +20,7 @@ body{
   width: 100%;
   min-height: 100vh;
   background: var(--white);
-  border-top: 10px solid #dcdcdc; /* subtle “browser” top strip like your image */
+  border-top: 10px solid #dcdcdc;
 }
 
 /* Top bar */
