@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gym Occupancy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="frame">
+
+    <header class="topbar">
+      <div class="logo-box">
+        <div class="logo-icon"></div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="nav-btn nav-outline" type="button">High-Traffic Times</button>
+        <button class="nav-btn nav-dark" type="button">Workouts</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="hero-box">
+        <div class="hero-content">
+          <div class="small-title">BYUI</div>
+
+          <h1 class="hero-title">
+            Estimated Number of People in<br />
+            Gym
+          </h1>
+
+          <div class="count" id="count">###</div>
+        </div>
+      </section>
+
+      <div class="bottom">
+        <div class="bottom-buttons">
+          <button class="pill pill-dark" id="testBtn" type="button">Button</button>
+          <button class="pill pill-outline" id="refreshBtn" type="button">Button</button>
+        </div>
+
+        <div class="status" id="status"></div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
