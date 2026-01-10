@@ -2,7 +2,6 @@ using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Optional: set API key in appsettings.json or environment variable.
 // If API_KEY is empty, no key is required.
 var apiKey = builder.Configuration["API_KEY"] ?? "";
 
@@ -17,7 +16,6 @@ TimeSpan presenceWindow = TimeSpan.FromHours(1);     // how long a person stays 
 TimeSpan debounceWindow = TimeSpan.FromSeconds(3);   // ignore repeat triggers within 3s
 
 // -------------------- In-memory event store --------------------
-// Store timestamps of accepted entry events (UTC)
 var events = new ConcurrentQueue<DateTime>();
 
 DateTime lastAcceptedUtc = DateTime.MinValue;
@@ -52,9 +50,6 @@ int ActiveCount()
 
 // -------------------- API Endpoints --------------------
 
-// POST /api/entry
-// Body JSON example:
-// { "source": "front-door", "apiKey": "yourKeyHere" }
 app.MapPost("/api/entry", (EntryRequest req) =>
 {
     // If an API key is configured, require it
