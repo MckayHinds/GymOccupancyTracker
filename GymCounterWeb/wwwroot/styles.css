@@ -165,3 +165,46 @@ body{
   color: var(--muted);
   min-height: 18px;
 }
+/* high-traffic */
+.panel {
+  padding: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 0 24px 24px;
+}
+
+.box {
+  border: 1px solid var(--border);
+  padding: 16px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 1px solid #ddd;
+}
+
+.muted {
+  color: #666;
+}
+
+.status {
+  padding: 0 24px 24px;
+  color: #666;
+}
+
+@media (max-width: 800px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

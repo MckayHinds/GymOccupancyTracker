@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>High Traffic Times</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="frame">
+
+    <!-- Top navigation (same style as home) -->
+    <header class="topbar">
+      <div class="logo-box">
+        <div class="logo-icon"></div>
+      </div>
+
+      <div class="nav-actions">
+        <a class="nav-btn nav-outline" href="/">Home</a>
+        <a class="nav-btn nav-dark" href="/high-traffic.html">High-Traffic Times</a>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="panel">
+        <h1>High Traffic Times</h1>
+        <p class="muted">
+          Based on recorded occupancy over time.
+        </p>
+      </section>
+
+      <section class="grid">
+        <div class="box">
+          <h2>Peak by Day of Week</h2>
+          <table id="dayTable">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Peak People</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="box">
+          <h2>Peak by Hour of Day</h2>
+          <table id="hourTable">
+            <thead>
+              <tr>
+                <th>Hour</th>
+                <th>Peak People</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <p id="status" class="status"></p>
+    </main>
+  </div>
+
+  <script src="high-traffic.js"></script>
+</body>
+</html>
