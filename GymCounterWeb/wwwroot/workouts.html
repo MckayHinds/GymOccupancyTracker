@@ -10,19 +10,19 @@
 <body class="frame">
     <header class="topbar">
       <div class="logo-box">
-        <img src="images\byui_logo.svg" alt="Byu-I Logo">
+        <img src="images/byui_logo.svg" alt="Byu-I Logo">
       </div>
 
         <div class="nav-actions">
-        <a class="nav-btn nav-outline" href="/high-traffic.html">
+        <a class="nav-btn nav-outline" href="high-traffic.html">
             High-Traffic Times
         </a>
 
-        <a class="nav-btn nav-outline" href="/workouts.html">
+        <a class="nav-btn nav-outline" href="workouts.html">
             Workouts
         </a>
 
-        <a class="nav-btn nav-outline" href="/index.html">
+        <a class="nav-btn nav-outline" href="index.html">
             Home
         </a>
         </div>
@@ -30,19 +30,30 @@
     </header>
 
     <main class="main">
+        <h2>Cardio Workouts</h2>
         <div class="slide">
-            <h2 id="day"></h2>
-            <p id="text"></p>
+            <h3 id="cardio-day"></h3>
+            <p id="cardio-text"></p>
         </div>
+        <button onclick="prevCardio()">⬅️</button>
+        <button onclick="nextCardio()">➡️</button>
 
-        <button onclick="prevSlide()">⬅️</button>
-        <button onclick="nextSlide()">➡️</button>
+        <hr>
+
+        <h2>Strength Workouts</h2>
+        <div class="slide">
+            <h3 id="strength-day"></h3>
+            <p id="strength-text"></p>
+        </div>
+        <button onclick="prevStrength()">⬅️</button>
+        <button onclick="nextStrength()">➡️</button>
+
 
         <script src="workouts.js"></script>
 
     </main>
-    <Footer>
+    <footer>
 
-    </Footer>
+    </footer>
 </body>
 </html>
