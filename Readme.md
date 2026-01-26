@@ -35,6 +35,9 @@ To recreate the development environment, you need the following software and/or 
 * Connect to ou repository and connect code to website and hardware. 
 *
 
+## MQTT Protocol
+The ESP32 speaks to an MQTT broker (basically a hardware backend) to get our messages from the ESP32 to the website backend. The ESP32 will send data through the "esp32DataChannel" channel and the backend will subscribe to that channel to receive the messages. The messages will be encoded with the information from the people entering the gym.
+
 ## Useful Websites to Learn More
 
 I found these websites useful in developing this software:
