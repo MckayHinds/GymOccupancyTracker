@@ -40,13 +40,3 @@ To recreate the development environment, you need the following software and/or 
 I found these websites useful in developing this software:
 
 * [Website Title] https://www.w3schools.com/CPP/default.asp 
-*
-*
-
-## Future Work
-
-The following items I plan to fix, improve, and/or add to this project in the future:
-
-* [ ] First thing here
-* [ ]
-* [ ]
