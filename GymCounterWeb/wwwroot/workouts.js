@@ -1,7 +1,7 @@
 // Detailed weekly cardio workout plan
 const cardioWorkouts = [
   {
-    day: "Monday — Steady-State Cardio",
+    day: "Cardio — Day 1: Steady-State Cardio",
     text: `
 • 5-minute warm-up (light jog or brisk walk)
 • 30–40 minutes at a steady, moderate pace
@@ -13,7 +13,7 @@ const cardioWorkouts = [
     `
   },
   {
-    day: "Tuesday — HIIT Intervals",
+    day: "Cardio — Day 2: HIIT Intervals",
     text: `
 • 5-minute warm-up (dynamic stretching + light jog)
 • 20 minutes of intervals:
@@ -24,7 +24,7 @@ const cardioWorkouts = [
     `
   },
   {
-    day: "Wednesday — Low-Impact + Core",
+    day: "Cardio — Day 3: Low-Impact + Core",
     text: `
 • 30 minutes low-impact cardio:
    - Swimming laps
@@ -39,7 +39,7 @@ const cardioWorkouts = [
     `
   },
   {
-    day: "Thursday — Tempo Cardio",
+    day: "Cardio — Day 4: Tempo Cardio",
     text: `
 • 5-minute warm-up
 • 20–25 minutes at a “comfortably hard” pace:
@@ -50,7 +50,7 @@ const cardioWorkouts = [
     `
   },
   {
-    day: "Friday — Mixed Cardio Circuit",
+    day: "Cardio — Day 5: Mixed Cardio Circuit",
     text: `
 • 30–40 minutes rotating through 5-minute blocks:
    - Jump rope
@@ -63,7 +63,7 @@ const cardioWorkouts = [
     `
   },
   {
-    day: "Saturday — Long Slow Distance (LSD)",
+    day: "Cardio — Day 6: Long Slow Distance (LSD)",
     text: `
 • 45–60 minutes at an easy, conversational pace
 • Choose your favorite:
@@ -76,7 +76,7 @@ const cardioWorkouts = [
     `
   },
   {
-    day: "Sunday — Active Recovery",
+    day: "Cardio — Day 7: Active Recovery",
     text: `
 • 20–30 minutes gentle movement:
    - Walking outside
