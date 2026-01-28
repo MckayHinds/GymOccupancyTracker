@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gym Occupancy</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="workoutstyles.css" />
 </head>
 
 <body class="frame">
@@ -12,6 +12,14 @@
       <div class="logo-box">
         <img src="images/byui_logo.svg" alt="Byu-I Logo">
       </div>
+
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+      <script>
+      function toggleMenu() {
+          document.querySelector('.nav-actions').classList.toggle('active');
+      }
+      </script>
 
         <div class="nav-actions">
         <a class="nav-btn nav-outline" href="high-traffic.html">
@@ -52,8 +60,8 @@
         <script src="workouts.js"></script>
 
     </main>
-    <footer>
-
+    <footer class="site-footer">
+    <p>© 2026 Bracken, Mckay, Sterling. All rights reserved.</p>
     </footer>
 </body>
 </html>

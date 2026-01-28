@@ -97,6 +97,78 @@
 }
 
 /* Workout CSS Page */ 
+/* Main content layout */
+.main {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+/* Slide container */
+.slide {
+    background: #ffffff;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    min-height: 180px;
+}
+
+.slide:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+/* Slide headings */
+.slide h3 {
+    margin-top: 0;
+    color: #0a4d8c; /* BYU–Idaho blue tone */
+}
+
+/* Workout text formatting */
+.slide p {
+    white-space: pre-line; /* preserves line breaks from JS */
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+/* Navigation buttons */
+.main button {
+    background: #0a4d8c;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    margin: 0.3rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.main button:hover {
+    background: #083a6a;
+    transform: scale(1.05);
+}
+
+.main button:active {
+    transform: scale(0.97);
+}
+
+/* Section titles */
+.main h2 {
+    margin-top: 2rem;
+    color: #222;
+    text-align: center;
+}
+
+/* Divider */
+.main hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
 
 
 /* --- Mobile Styles --- */
@@ -124,5 +196,12 @@
     /* When menu is active */
     .nav-actions.active {
         display: flex;
+    }
+    .main {
+        padding: 0.5rem;
+    }
+
+    .main button {
+        width: 48%;
     }
 }

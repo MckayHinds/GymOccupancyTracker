@@ -13,21 +13,31 @@
     <!-- Top navigation (same style as home) -->
     <header class="topbar">
       <div class="logo-box">
-        <div class="logo-icon"></div>
+        <img src="images\byui_logo.svg" alt="Byu-I Logo">
       </div>
+
+      <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+      <script>
+      function toggleMenu() {
+          document.querySelector('.nav-actions').classList.toggle('active');
+      }
+      </script>
 
       <div class="nav-actions">
         <a class="nav-btn nav-outline" href="high-traffic.html">
-    High-Traffic Times
-  </a>
+          High-Traffic Times
+        </a>
 
-  <a class="nav-btn nav-outline" href="workouts.html">
-    Workouts
-  </a>
+        <a class="nav-btn nav-outline" href="workouts.html">
+          Workouts
+        </a>
 
-  <a class="nav-btn nav-outline" href="index.html">
-    Home
-  </a>
+        <a class="nav-btn nav-outline" href="index.html">
+          Home
+        </a>
+      </div>
+
     </header>
 
     <main class="main">
@@ -69,7 +79,11 @@
       <p id="status" class="status"></p>
     </main>
   </div>
+  <footer class="site-footer">
+    <p>© 2026 Bracken, Mckay, Sterling. All rights reserved.</p>
+  </footer>
 
   <script src="high-traffic.js"></script>
 </body>
 </html>
+ 
