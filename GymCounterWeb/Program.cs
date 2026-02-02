@@ -5,8 +5,11 @@ var builder = WebApplication.CreateBuilder(args);
 // If API_KEY is empty or missing, no key is required.
 var apiKey = builder.Configuration["API_KEY"] ?? "";
 
-
 builder.WebHost.UseUrls("http://0.0.0.0:5168");
+
+// Store + MQTT background service
+builder.Services.AddSingleton<OccupancyStore>();
+builder.Services.AddHostedService<MqttListenerService>();
 
 var app = builder.Build();
 
@@ -14,90 +17,64 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// -------------------- Configuration --------------------
-TimeSpan presenceWindow = TimeSpan.FromHours(1);     // how long someone stays “counted”
-TimeSpan debounceWindow = TimeSpan.FromSeconds(3);   // ignore repeat triggers within 3 seconds
-
-// -------------------- In-memory event store --------------------
-var events = new ConcurrentQueue<DateTime>();
-
-DateTime lastAcceptedUtc = DateTime.MinValue;
-object debounceLock = new();
-
-// Remove events older than the presence window so Count stays accurate and memory doesn't grow forever.
-void PruneOld()
-{
-    var cutoff = DateTime.UtcNow - presenceWindow;
-
-    while (events.TryPeek(out var ts) && ts < cutoff)
-        events.TryDequeue(out _);
-}
-
-// Debounce: accept at most one event within debounceWindow.
-bool TryAcceptTrigger(out DateTime acceptedUtc)
-{
-    acceptedUtc = DateTime.UtcNow;
-
-    lock (debounceLock)
-    {
-        if (acceptedUtc - lastAcceptedUtc < debounceWindow)
-            return false;
-
-        lastAcceptedUtc = acceptedUtc;
-        return true;
-    }
-}
-
-int ActiveCount()
-{
-    PruneOld();
-    return events.Count;
-}
-
 // -------------------- API Endpoints --------------------
 
-// { "source": "front-door", "apiKey": "YOUR_API_KEY" }
-app.MapPost("/api/entry", (EntryRequest req) =>
+// { "source": "front-door", "apiKey": " " }
+app.MapPost("/api/entry", (EntryRequest req, OccupancyStore store) =>
 {
-    // API key check (optional)
+    // API key check
     if (!string.IsNullOrWhiteSpace(apiKey))
     {
         if (string.IsNullOrWhiteSpace(req.ApiKey) || !string.Equals(req.ApiKey, apiKey, StringComparison.Ordinal))
             return Results.Unauthorized();
     }
 
-    // Debounce (so one door-open doesn't count multiple times)
-    if (!TryAcceptTrigger(out var nowUtc))
+    var accepted = store.RecordEntry(
+        source: req.Source ?? "http:unknown",
+        rawMessage: "http-trigger",
+        out var active
+    );
+
+    if (!accepted)
     {
         return Results.Ok(new
         {
             accepted = false,
             reason = "debounced",
-            activeLastHour = ActiveCount()
+            activeLastHour = active
         });
     }
-
-    events.Enqueue(nowUtc);
 
     return Results.Ok(new
     {
         accepted = true,
-        recordedAtUtc = nowUtc,
-        source = req.Source ?? "unknown",
-        activeLastHour = ActiveCount()
+        recordedAtUtc = DateTime.UtcNow,
+        source = req.Source ?? "http:unknown",
+        activeLastHour = active
     });
 });
 
 // GET /api/occupancy
-app.MapGet("/api/occupancy", () =>
+app.MapGet("/api/occupancy", (OccupancyStore store) =>
 {
+    var (presenceWindow, _) = store.Settings();
     var cutoff = DateTime.UtcNow - presenceWindow;
 
     return Results.Ok(new
     {
-        activeLastHour = ActiveCount(),
+        activeLastHour = store.ActiveCount(),
         cutoffUtc = cutoff,
         windowMinutes = presenceWindow.TotalMinutes
+    });
+});
+
+app.MapGet("/api/latest", (OccupancyStore store) =>
+{
+    var (msg, utc) = store.Latest();
+    return Results.Ok(new
+    {
+        latestMessage = msg,
+        latestMessageUtc = utc
     });
 });
 
@@ -107,3 +84,4 @@ app.MapGet("/api/health", () => Results.Ok(new { ok = true, timeUtc = DateTime.U
 app.Run();
 
 record EntryRequest(string? Source, string? ApiKey);
+
