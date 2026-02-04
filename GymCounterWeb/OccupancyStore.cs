@@ -2,24 +2,29 @@ using System.Collections.Concurrent;
 
 public class OccupancyStore
 {
-    private readonly TimeSpan _presenceWindow = TimeSpan.FromHours(1);
-    private readonly TimeSpan _debounceWindow = TimeSpan.FromSeconds(3);
+    private readonly TimeSpan _presenceWindow = TimeSpan.FromHours(1);     // how long someone stays “counted”
+    private readonly TimeSpan _debounceWindow = TimeSpan.FromSeconds(3);   // ignore repeat triggers within 3 seconds
 
     private readonly ConcurrentQueue<DateTime> _events = new();
+
     private DateTime _lastAcceptedUtc = DateTime.MinValue;
     private readonly object _debounceLock = new();
 
-    // store latest message for UI display
-    private volatile string _latestMessage = "";
-    private volatile DateTime _latestMessageUtc = DateTime.MinValue;
+    // Latest message storage (thread-safe)
+    private readonly object _latestLock = new();
+    private string _latestMessage = "";
+    private DateTime _latestMessageUtc = DateTime.MinValue;
 
+    // Remove events older than the presence window so Count stays accurate and memory doesn't grow forever.
     private void PruneOld()
     {
         var cutoff = DateTime.UtcNow - _presenceWindow;
+
         while (_events.TryPeek(out var ts) && ts < cutoff)
             _events.TryDequeue(out _);
     }
 
+    // Debounce: accept at most one event within debounceWindow.
     private bool TryAcceptTrigger(DateTime nowUtc)
     {
         lock (_debounceLock)
@@ -36,10 +41,14 @@ public class OccupancyStore
     {
         var nowUtc = DateTime.UtcNow;
 
-        _latestMessage = $"{source}: {rawMessage}";
-        _latestMessageUtc = nowUtc;
+        // Store latest message (for UI display)
+        lock (_latestLock)
+        {
+            _latestMessage = $"{source}: {rawMessage}";
+            _latestMessageUtc = nowUtc;
+        }
 
-        // debounce so one physical event doesn't count multiple times
+        // Debounce
         if (!TryAcceptTrigger(nowUtc))
         {
             activeLastHour = ActiveCount();
@@ -47,6 +56,7 @@ public class OccupancyStore
         }
 
         _events.Enqueue(nowUtc);
+
         activeLastHour = ActiveCount();
         return true;
     }
@@ -58,7 +68,12 @@ public class OccupancyStore
     }
 
     public (string message, DateTime utc) Latest()
-        => (_latestMessage, _latestMessageUtc);
+    {
+        lock (_latestLock)
+        {
+            return (_latestMessage, _latestMessageUtc);
+        }
+    }
 
     public (TimeSpan presenceWindow, TimeSpan debounceWindow) Settings()
         => (_presenceWindow, _debounceWindow);

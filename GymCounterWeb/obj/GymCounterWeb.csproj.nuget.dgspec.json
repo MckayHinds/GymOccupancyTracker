@@ -43,6 +43,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "MQTTnet": {
+              "target": "Package",
+              "version": "[4.3.7.1207, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

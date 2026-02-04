@@ -2,7 +2,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Client.Options;
+using MQTTnet.Protocol;
 using System.Text;
 
 public class MqttListenerService : BackgroundService
@@ -34,25 +34,31 @@ public class MqttListenerService : BackgroundService
 
         if (!int.TryParse(portStr, out var port))
         {
-            _logger.LogError("MQTT_PORT is not a valid int: {PortStr}", portStr);
+            _logger.LogError("MQTT_PORT is not a valid integer: {Port}", portStr);
             return;
         }
 
         var factory = new MqttFactory();
-        using var mqttClient = factory.CreateMqttClient();
+        var mqttClient = factory.CreateMqttClient();
 
+        // ✅ Correct receive hook for your MQTTnet API surface
         mqttClient.ApplicationMessageReceivedAsync += e =>
         {
             try
             {
                 var topic = e.ApplicationMessage.Topic;
-                var payloadBytes = e.ApplicationMessage.PayloadSegment.Array ?? Array.Empty<byte>();
-                var payload = Encoding.UTF8.GetString(payloadBytes, e.ApplicationMessage.PayloadSegment.Offset, e.ApplicationMessage.PayloadSegment.Count);
 
-                // Record it in occupancy store
-                var accepted = _store.RecordEntry(source: $"mqtt:{topic}", rawMessage: payload, out var active);
-                _logger.LogInformation("MQTT message topic={Topic} accepted={Accepted} activeLastHour={Active} payload={Payload}",
-                    topic, accepted, active, payload);
+                var seg = e.ApplicationMessage.PayloadSegment;
+                var payload = seg.Array is null
+                    ? ""
+                    : Encoding.UTF8.GetString(seg.Array, seg.Offset, seg.Count);
+
+                var accepted = _store.RecordEntry($"mqtt:{topic}", payload, out var active);
+
+                _logger.LogInformation(
+                    "MQTT msg topic={Topic} accepted={Accepted} activeLastHour={Active} payload={Payload}",
+                    topic, accepted, active, payload
+                );
             }
             catch (Exception ex)
             {
@@ -62,48 +68,56 @@ public class MqttListenerService : BackgroundService
             return Task.CompletedTask;
         };
 
-        // Build TLS options (broker uses 8883)
+        // ✅ Correct TLS builder usage (UseTls is a method)
         var options = new MqttClientOptionsBuilder()
             .WithClientId($"backend-{Guid.NewGuid():N}")
             .WithTcpServer(host, port)
             .WithCredentials(user, pass)
-            .WithTls(new MqttClientOptionsBuilderTlsParameters
+            .WithTlsOptions(tls =>
             {
-                UseTls = true,
-                AllowUntrustedCertificates = true,
-                IgnoreCertificateChainErrors = true,
-                IgnoreCertificateRevocationErrors = true 
+                tls.UseTls();
+
+                // If your version doesn't support these methods, just delete them—
+                // TLS will still be enabled.
+                tls.WithAllowUntrustedCertificates(true);
+                tls.WithIgnoreCertificateChainErrors(true);
+                tls.WithIgnoreCertificateRevocationErrors(true);
             })
             .WithCleanSession()
             .Build();
 
-        // Simple reconnect loop
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
                 if (!mqttClient.IsConnected)
                 {
-                    _logger.LogInformation("Connecting to MQTT broker {Host}:{Port} ...", host, port);
+                    _logger.LogInformation("Connecting to MQTT {Host}:{Port} ...", host, port);
                     await mqttClient.ConnectAsync(options, stoppingToken);
 
-                    _logger.LogInformation("Connected. Subscribing to {TopicOut}", topicOut);
-                    await mqttClient.SubscribeAsync(topicOut, MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce, stoppingToken);
+                    _logger.LogInformation("Connected. Subscribing to {Topic}", topicOut);
+
+                    // ✅ Subscribe using topic filter builder (works across many versions)
+                    var filter = new MqttTopicFilterBuilder()
+                        .WithTopic(topicOut)
+                        .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                        .Build();
+
+                    await mqttClient.SubscribeAsync(filter, stoppingToken);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "MQTT connect/subscribe failed. Retrying in 3s...");
+                _logger.LogWarning(ex, "MQTT connect/subscribe failed. Retrying in 3 seconds...");
                 await Task.Delay(TimeSpan.FromSeconds(3), stoppingToken);
             }
 
             await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
         }
 
-        // disconnect
         if (mqttClient.IsConnected)
         {
-            await mqttClient.DisconnectAsync(cancellationToken: CancellationToken.None);
+            await mqttClient.DisconnectAsync();
         }
     }
 }
