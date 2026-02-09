@@ -41,7 +41,7 @@ public class OccupancyStore
     {
         var nowUtc = DateTime.UtcNow;
 
-        // Store latest message (for UI display)
+        // Store latest message
         lock (_latestLock)
         {
             _latestMessage = $"{source}: {rawMessage}";
