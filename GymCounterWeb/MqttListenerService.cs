@@ -41,7 +41,7 @@ public class MqttListenerService : BackgroundService
         var factory = new MqttFactory();
         var mqttClient = factory.CreateMqttClient();
 
-        // ✅ Correct receive hook for your MQTTnet API surface
+        //Correct receive hook for your MQTTnet API surface
         mqttClient.ApplicationMessageReceivedAsync += e =>
         {
             try
@@ -68,7 +68,7 @@ public class MqttListenerService : BackgroundService
             return Task.CompletedTask;
         };
 
-        // ✅ Correct TLS builder usage (UseTls is a method)
+        // Correct TLS builder usage
         var options = new MqttClientOptionsBuilder()
             .WithClientId($"backend-{Guid.NewGuid():N}")
             .WithTcpServer(host, port)
@@ -76,9 +76,6 @@ public class MqttListenerService : BackgroundService
             .WithTlsOptions(tls =>
             {
                 tls.UseTls();
-
-                // If your version doesn't support these methods, just delete them—
-                // TLS will still be enabled.
                 tls.WithAllowUntrustedCertificates(true);
                 tls.WithIgnoreCertificateChainErrors(true);
                 tls.WithIgnoreCertificateRevocationErrors(true);
@@ -97,7 +94,7 @@ public class MqttListenerService : BackgroundService
 
                     _logger.LogInformation("Connected. Subscribing to {Topic}", topicOut);
 
-                    // ✅ Subscribe using topic filter builder (works across many versions)
+                    //Subscribe using topic filter builder
                     var filter = new MqttTopicFilterBuilder()
                         .WithTopic(topicOut)
                         .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
