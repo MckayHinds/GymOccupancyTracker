@@ -1,21 +1,44 @@
-// If you set API_KEY in appsettings.json, put the same key here for the test button.
+// ---------------- CONFIG ----------------
+
+const BACKEND_BASE_URL = "http://localhost:5168";
+
+// If you set API_KEY in appsettings.json, put the same key here.
 // If API_KEY is "", leave this as "".
-const API_KEY = ""; // or our key
+const API_KEY = "";
 
-async function getOccupancy() {
-  const res = await fetch("/api/occupancy", { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load occupancy");
+// ---------------- HELPERS ----------------
+
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+async function fetchJson(path, options = {}) {
+  const url = `${BACKEND_BASE_URL}${path}`;
+  const res = await fetch(url, { cache: "no-store", ...options });
+
+  if (!res.ok) {
+    // Try to extract server response for debugging
+    let bodyText = "";
+    try { bodyText = await res.text(); } catch {}
+    throw new Error(`Request failed: ${res.status} ${res.statusText}${bodyText ? " - " + bodyText : ""}`);
+  }
+
   return await res.json();
 }
 
-async function getLatest() {
-  const res = await fetch("/api/latest", { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load latest message");
-  return await res.json();
+// ---------------- API CALLS ----------------
+
+function getOccupancy() {
+  return fetchJson("/api/occupancy");
 }
 
-async function postEntry() {
-  const res = await fetch("/api/entry", {
+function getLatest() {
+  return fetchJson("/api/latest");
+}
+
+function postEntry() {
+  return fetchJson("/api/entry", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -23,25 +46,25 @@ async function postEntry() {
       apiKey: API_KEY
     })
   });
-  if (res.status === 401) throw new Error("Unauthorized (API key incorrect)");
-  if (!res.ok) throw new Error("Could not record entry");
-  return await res.json();
 }
 
-function setText(id, value) {
-  document.getElementById(id).textContent = value;
-}
+// ---------------- UI REFRESH ----------------
 
 async function refresh() {
   try {
-    // Fetch both endpoints in parallel
+    setText("backendInfo", `Backend: ${BACKEND_BASE_URL}`);
+
     const [occ, latest] = await Promise.all([getOccupancy(), getLatest()]);
 
-    // Update big number
+    // Update big number (hour-based count)
     setText("count", occ.activeLastHour);
 
     // Status shows latest MQTT message if we have one
-    if (latest.latestMessage && latest.latestMessageUtc && latest.latestMessageUtc !== "0001-01-01T00:00:00") {
+    if (
+      latest.latestMessage &&
+      latest.latestMessageUtc &&
+      latest.latestMessageUtc !== "0001-01-01T00:00:00"
+    ) {
       const t = new Date(latest.latestMessageUtc).toLocaleTimeString();
       setText("status", `Last activity: ${latest.latestMessage} @ ${t}`);
     } else {

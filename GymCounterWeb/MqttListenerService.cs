@@ -24,7 +24,12 @@ public class MqttListenerService : BackgroundService
         var portStr = _config["MQTT_PORT"];
         var user = _config["MQTT_USER"];
         var pass = _config["MQTT_PASS"];
+
+        // ESP32 ->(incoming)
         var topicOut = _config["MQTT_TOPIC_OUT"] ?? "esp32DataChannel";
+
+        // Backend ->(ACK / commands outgoing)
+        var topicIn = _config["MQTT_TOPIC_IN"] ?? "esp32CommandChannel";
 
         if (string.IsNullOrWhiteSpace(host) || string.IsNullOrWhiteSpace(portStr))
         {
@@ -41,8 +46,8 @@ public class MqttListenerService : BackgroundService
         var factory = new MqttFactory();
         var mqttClient = factory.CreateMqttClient();
 
-        //Correct receive hook for your MQTTnet API surface
-        mqttClient.ApplicationMessageReceivedAsync += e =>
+        // Receive messages from ESP32
+        mqttClient.ApplicationMessageReceivedAsync += async e =>
         {
             try
             {
@@ -59,16 +64,26 @@ public class MqttListenerService : BackgroundService
                     "MQTT msg topic={Topic} accepted={Accepted} activeLastHour={Active} payload={Payload}",
                     topic, accepted, active, payload
                 );
+
+                // ---------------- ACK BACK TO ESP32 ----------------
+                // ESP32 should subscribe to MQTT_TOPIC_IN (esp32CommandChannel)
+                var ackPayload = $"ACK|accepted={accepted}|activeLastHour={active}|utc={DateTime.UtcNow:O}";
+
+                var ackMsg = new MqttApplicationMessageBuilder()
+                    .WithTopic(topicIn)
+                    .WithPayload(ackPayload)
+                    .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
+                    .Build();
+
+                // Publish ACK
+                await mqttClient.PublishAsync(ackMsg);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error processing MQTT message");
             }
-
-            return Task.CompletedTask;
         };
 
-        // Correct TLS builder usage
         var options = new MqttClientOptionsBuilder()
             .WithClientId($"backend-{Guid.NewGuid():N}")
             .WithTcpServer(host, port)
@@ -94,13 +109,14 @@ public class MqttListenerService : BackgroundService
 
                     _logger.LogInformation("Connected. Subscribing to {Topic}", topicOut);
 
-                    //Subscribe using topic filter builder
                     var filter = new MqttTopicFilterBuilder()
                         .WithTopic(topicOut)
                         .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtLeastOnce)
                         .Build();
 
                     await mqttClient.SubscribeAsync(filter, stoppingToken);
+
+                    _logger.LogInformation("Subscribed to {Topic}. ACK topic is {AckTopic}", topicOut, topicIn);
                 }
             }
             catch (Exception ex)
@@ -118,3 +134,4 @@ public class MqttListenerService : BackgroundService
         }
     }
 }
+

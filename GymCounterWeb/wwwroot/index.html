@@ -12,32 +12,22 @@
 
     <header class="topbar">
       <div class="logo-box">
-        <img src="images\byui_logo.svg" alt="Byu-I Logo">
+        <img src="images/byui_logo.svg" alt="Byu-I Logo">
       </div>
 
       <div class="hamburger" onclick="toggleMenu()">☰</div>
 
       <script>
-      function toggleMenu() {
+        function toggleMenu() {
           document.querySelector('.nav-actions').classList.toggle('active');
-      }
+        }
       </script>
 
-
       <div class="nav-actions">
-        <a class="nav-btn nav-outline" href="high-traffic.html">
-          High-Traffic Times
-        </a>
-
-        <a class="nav-btn nav-outline" href="workouts.html">
-          Workouts
-        </a>
-
-        <a class="nav-btn nav-outline" href="index.html">
-          Home
-        </a>
+        <a class="nav-btn nav-outline" href="high-traffic.html">High-Traffic Times</a>
+        <a class="nav-btn nav-outline" href="workouts.html">Workouts</a>
+        <a class="nav-btn nav-outline" href="index.html">Home</a>
       </div>
-
     </header>
 
     <main class="main">
@@ -56,21 +46,24 @@
 
       <div class="bottom">
         <div class="bottom-buttons">
-          <button class="pill pill-dark" id="testBtn" type="button">Button</button>
-          <button class="pill pill-outline" id="refreshBtn" type="button">Button</button>
+          <button class="pill pill-dark" id="testBtn" type="button">Test +1</button>
+          <button class="pill pill-outline" id="refreshBtn" type="button">Refresh</button>
         </div>
 
         <div class="status" id="status"></div>
+
+        <div class="status" id="backendInfo" style="opacity:.75;font-size:.9em;margin-top:.5rem;"></div>
       </div>
     </main>
-    
+
   </div>
 
   <footer class="site-footer">
     <p>© 2026 Bracken, Mckay, Sterling. All rights reserved.</p>
   </footer>
-  
+
   <script src="app.js"></script>
 </body>
 </html>
+
  
