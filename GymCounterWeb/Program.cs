@@ -2,6 +2,17 @@ using System.Collections.Concurrent;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin();
+    });
+});
+
 // If API_KEY is empty or missing, no key is required.
 var apiKey = builder.Configuration["API_KEY"] ?? "";
 
@@ -16,6 +27,7 @@ var app = builder.Build();
 // Serve static site from wwwroot
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
 
 // -------------------- API Endpoints --------------------
 
