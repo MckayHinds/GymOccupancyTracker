@@ -2,7 +2,6 @@
 
 const BACKEND_BASE_URL = "http://localhost:5168";
 
-// If you set API_KEY in appsettings.json, put the same key here.
 // If API_KEY is "", leave this as "".
 const API_KEY = "";
 
