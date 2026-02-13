@@ -24,10 +24,11 @@ builder.Services.AddHostedService<MqttListenerService>();
 
 var app = builder.Build();
 
+app.UseCors();
+
 // Serve static site from wwwroot
 app.UseDefaultFiles();
 app.UseStaticFiles();
-
 
 // -------------------- API Endpoints --------------------
 
@@ -96,4 +97,3 @@ app.MapGet("/api/health", () => Results.Ok(new { ok = true, timeUtc = DateTime.U
 app.Run();
 
 record EntryRequest(string? Source, string? ApiKey);
-

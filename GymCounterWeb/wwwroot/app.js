@@ -87,4 +87,4 @@ document.getElementById("testBtn").addEventListener("click", async () => {
 document.getElementById("refreshBtn").addEventListener("click", refresh);
 
 refresh();
-setInterval(refresh, 5000);
+setInterval(refresh, 2000);
