@@ -6,6 +6,8 @@ C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\bin\Debug\net8.0\GymCounterWeb.runtimeconfig.json
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\bin\Debug\net8.0\GymCounterWeb.dll
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\bin\Debug\net8.0\GymCounterWeb.pdb
+C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\bin\Debug\net8.0\MQTTnet.dll
+C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\GymCounterWeb.csproj.AssemblyReference.cache
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\rpswa.dswa.cache.json
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\GymCounterWeb.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\GymCounterWeb.AssemblyInfoInputs.cache
@@ -21,6 +23,7 @@ C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\GymCount.4670820E.Up2Date
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\GymCounterWeb.dll
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\refint\GymCounterWeb.dll
 C:\Users\mckay\OneDrive\Documents\GitHub\GymOccupancyTracker\GymOccupancyTracker\GymCounterWeb\obj\Debug\net8.0\GymCounterWeb.pdb
