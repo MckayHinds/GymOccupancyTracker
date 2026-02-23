@@ -210,3 +210,6 @@ th, td {
   border-bottom: 1px solid #ccc;
   text-align: left;
 }
+#backendInfo{
+  display:none;
+}

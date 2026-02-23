@@ -1,12 +1,8 @@
 // ---------------- CONFIG ----------------
-
 const BACKEND_BASE_URL = "http://localhost:5168";
-
-// If API_KEY is "", leave this as "".
 const API_KEY = "";
 
 // ---------------- HELPERS ----------------
-
 function setText(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
@@ -17,7 +13,6 @@ async function fetchJson(path, options = {}) {
   const res = await fetch(url, { cache: "no-store", ...options });
 
   if (!res.ok) {
-    // Try to extract server response for debugging
     let bodyText = "";
     try { bodyText = await res.text(); } catch {}
     throw new Error(`Request failed: ${res.status} ${res.statusText}${bodyText ? " - " + bodyText : ""}`);
@@ -27,7 +22,6 @@ async function fetchJson(path, options = {}) {
 }
 
 // ---------------- API CALLS ----------------
-
 function getOccupancy() {
   return fetchJson("/api/occupancy");
 }
@@ -48,42 +42,46 @@ function postEntry() {
 }
 
 // ---------------- UI REFRESH ----------------
-
 async function refresh() {
   try {
     setText("backendInfo", `Backend: ${BACKEND_BASE_URL}`);
 
     const [occ, latest] = await Promise.all([getOccupancy(), getLatest()]);
 
-    // Update big number (hour-based count)
-    setText("count", occ.activeLastHour);
-
-    // Status shows latest MQTT message if we have one
+    setText("gym-count", occ.activeLastHour);
     if (
       latest.latestMessage &&
       latest.latestMessageUtc &&
       latest.latestMessageUtc !== "0001-01-01T00:00:00"
     ) {
       const t = new Date(latest.latestMessageUtc).toLocaleTimeString();
-      setText("status", `Last activity: ${latest.latestMessage} @ ${t}`);
+      setText("backendInfo", `Backend: ${BACKEND_BASE_URL} • Last activity: ${latest.latestMessage} @ ${t}`);
     } else {
-      setText("status", "Waiting for sensor data…");
+      setText("backendInfo", `Backend: ${BACKEND_BASE_URL} • Waiting for sensor data…`);
     }
   } catch (err) {
-    setText("status", err.message);
+    setText("backendInfo", `Backend: ${BACKEND_BASE_URL} • Error: ${err.message}`);
   }
 }
 
-document.getElementById("testBtn").addEventListener("click", async () => {
-  try {
-    await postEntry();
-  } catch (err) {
-    setText("status", err.message);
-  }
-  await refresh();
-});
+// ---------------- OPTIONAL BUTTONS ----------------
+const testBtn = document.getElementById("testBtn");
+if (testBtn) {
+  testBtn.addEventListener("click", async () => {
+    try {
+      await postEntry();
+    } catch (err) {
+      setText("backendInfo", err.message);
+    }
+    await refresh();
+  });
+}
 
-document.getElementById("refreshBtn").addEventListener("click", refresh);
+const refreshBtn = document.getElementById("refreshBtn");
+if (refreshBtn) {
+  refreshBtn.addEventListener("click", refresh);
+}
 
+// Start polling
 refresh();
 setInterval(refresh, 2000);
