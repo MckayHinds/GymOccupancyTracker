@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/core": "^8.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.1.0",
+    "install": "^0.13.0",
+    "typescript": "^5.9.3",
+    "typescriptnpm": "^1.0.1"
+  }
+}

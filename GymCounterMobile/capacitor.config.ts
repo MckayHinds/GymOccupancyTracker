@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: 'Gym Occupancy',
   webDir: 'www',
   server: {
-    // url: 'https://DEPLOYED_SITE_URL_HERE',
-    cleartext: false
+    url: 'http://10.0.2.2:5500',
+    cleartext: true
   }
 };
 
