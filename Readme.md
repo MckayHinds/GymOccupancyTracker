@@ -6,7 +6,7 @@ This site is a prototype tracker that will show roughly how many people are at t
 Bracken Hibbert, Mckay Hinds, and Sterling Schurr
 
 # Team Communication
-As a team we are using a group text for communication outside of class. We start every class with a short team meeting to catch each other up on what we have been working on and that has been going well. 
+As a team we are using a group text for communication outside of class. We started every class with a short team meeting to catch each other up on what we have been working on and that has been going well. 
 
 ## Instructions for Build/Use and Team Responsibilities
 
@@ -23,23 +23,23 @@ Steps to build and/or run the software:
 
 Instructions for using the software:
 
-1. Go to website?
-2. Use data on people in gym to decide when to attend.
-3.
+1. cd GymCounterWeb
+2. dotnet run
+3. Open Live Server
 
 ## Development Environment
 
 To recreate the development environment, you need the following software and/or libraries with the specified versions:
 
-* Need Github and vscode
-* Connect to ou repository and connect code to website and hardware. 
-*
+* Needs Github and VS Code
+* Connect to our repository and connect code to the website and Arduino hardware. 
 
 ## MQTT Protocol
-The ESP32 speaks to an MQTT broker (basically a hardware backend) to get our messages from the ESP32 to the website backend. The ESP32 will send data through the "esp32DataChannel" channel and the backend will subscribe to that channel to receive the messages. The messages will be encoded with the information from the people entering the gym.
+The ESP32 speaks to an MQTT broker (basically a hardware backend) to get our messages from the ESP32 to the website backend. The ESP32 will send data through the "esp32DataChannel" channel, and the backend will subscribe to that channel to receive the messages. The messages will be encoded with the information from the people entering the gym.
 
 ## Useful Websites to Learn More
 
 I found these websites useful in developing this software:
 
-* [Website Title] https://www.w3schools.com/CPP/default.asp 
+* [Website Title] https://www.w3schools.com/CPP/default.asp
+* ChatGPT for Debugging
